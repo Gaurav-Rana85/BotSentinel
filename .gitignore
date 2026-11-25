@@ -1,0 +1,26 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+venv/
+.venv/
+
+# Testing
+.pytest_cache/
+pytest_error.txt
+
+# Dataset - keep large CSV files out of GitHub
+data/*.csv
+
+# MLflow generated artifacts
+mlruns/
+
+# Environment and local files
+.env
+.env.*
+!.env.example
+
+# Keep the trained model and MLflow database
+# model/model.joblib
+# model/training_results.csv
