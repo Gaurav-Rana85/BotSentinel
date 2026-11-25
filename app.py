@@ -1,7 +1,12 @@
-
+import logging
+import json
+from datetime import datetime, timezone
 import os
 import joblib
 import pandas as pd
+# Prediction monitoring
+logging.basicConfig(level=logging.INFO)
+prediction_logger = logging.getLogger("BotSentinel.Predictions")
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
@@ -171,6 +176,19 @@ def predict(data: TrafficInput):
                 "Continue routine network monitoring.",
                 "Maintain regular security checks."
             ]
+
+        # Structured prediction log for monitoring and future drift analysis.
+        # Avoid logging client IP addresses or other identifying metadata.
+        prediction_logger.info(
+            json.dumps({
+                "event": "prediction",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "features": data.model_dump(),
+                "prediction": prediction,
+                "label": label,
+                "confidence": round(confidence, 4)
+            }, ensure_ascii=False)
+        )
 
         return {
             "application": "BotSentinel",
